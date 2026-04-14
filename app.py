@@ -1,48 +1,87 @@
 import streamlit as st
 import pandas as pd
+import plotly.graph_objects as go
+
 from src.data_loader import load_data
 from src.preprocess import preprocess
 from src.model import train_model, forecast
+from src.lstm_model import train_lstm, forecast_lstm
+from src.metrics import calculate_metrics
 
 st.set_page_config(page_title="Walmart Forecast", layout="wide")
 
-st.title("🛒 Walmart Demand Forecasting & Inventory System")
+st.title("🛒 Walmart Demand Forecasting System")
 
-# Load data
-df = load_data()
-df = preprocess(df)
+# Load
+df = preprocess(load_data())
 
-# Sidebar filters
-st.sidebar.header("Filters")
-store = st.sidebar.selectbox("Select Store", df['Store'].unique())
-dept = st.sidebar.selectbox("Select Department", df['Dept'].unique())
+# Sidebar
+store = st.sidebar.selectbox("Store", df['Store'].unique())
+dept = st.sidebar.selectbox("Department", df['Dept'].unique())
 
-filtered = df[(df['Store'] == store) & (df['Dept'] == dept)]
+filtered = df[(df['Store']==store)&(df['Dept']==dept)]
+filtered = filtered[['Date','Weekly_Sales']].set_index('Date')
 
-filtered = filtered[['Date', 'Weekly_Sales']]
-filtered = filtered.set_index('Date')
+tab1, tab2 = st.tabs(["Forecast", "Comparison"])
 
-st.subheader("📊 Historical Sales")
-st.line_chart(filtered)
+# ---------- FORECAST TAB ----------
+with tab1:
+    st.line_chart(filtered)
 
-# Train model
-model = train_model(filtered['Weekly_Sales'])
+    model_type = st.selectbox("Model", ["ARIMA","LSTM"])
+    steps = st.slider("Forecast Weeks",1,12,8)
 
-# Forecast slider
-weeks = st.slider("Forecast Weeks", 1, 12, 8)
+    if model_type=="ARIMA":
+        model = train_model(filtered['Weekly_Sales'])
+        future = forecast(model,steps)
 
-future = forecast(model, weeks)
+    else:
+        epochs = st.slider("Epochs",10,50,20)
+        window = st.slider("Window Size",5,30,10)
 
-st.subheader("🔮 Forecast")
-st.line_chart(future)
+        model, scaler, history = train_lstm(filtered['Weekly_Sales'],epochs,window)
+        future = forecast_lstm(model,scaler,filtered['Weekly_Sales'],steps,window)
 
-# Inventory recommendation
-avg = future.mean()
-recommended = int(avg * 1.1)
+        # Loss graph
+        st.subheader("Training Loss")
+        st.line_chart(history.history['loss'])
 
-st.subheader("📦 Inventory Recommendation")
-st.success(f"Recommended weekly stock: {recommended} units")
+    st.subheader("Forecast")
+    st.line_chart(future)
 
-# Show raw data
-if st.checkbox("Show Raw Data"):
-    st.write(filtered.tail())
+    st.success(f"Recommended Stock: {int(future.mean()*1.1)} units")
+
+# ---------- COMPARISON TAB ----------
+with tab2:
+    train = filtered[:-20]
+    test = filtered[-20:]
+
+    # ARIMA
+    arima = train_model(train['Weekly_Sales'])
+    arima_pred = arima.forecast(len(test))
+
+    # LSTM
+    model, scaler, _ = train_lstm(train['Weekly_Sales'],20,10)
+    lstm_pred = forecast_lstm(model,scaler,train['Weekly_Sales'],len(test),10)
+
+    mae_a, rmse_a = calculate_metrics(test['Weekly_Sales'], arima_pred)
+    mae_l, rmse_l = calculate_metrics(test['Weekly_Sales'], lstm_pred)
+
+    col1, col2 = st.columns(2)
+    col1.metric("ARIMA RMSE", f"{rmse_a:.2f}")
+    col1.metric("ARIMA MAE", f"{mae_a:.2f}")
+
+    col2.metric("LSTM RMSE", f"{rmse_l:.2f}")
+    col2.metric("LSTM MAE", f"{mae_l:.2f}")
+
+    if rmse_l < rmse_a:
+        st.success("LSTM performs better")
+    else:
+        st.info("ARIMA performs better")
+
+    fig = go.Figure()
+    fig.add_scatter(x=test.index,y=test['Weekly_Sales'],name="Actual")
+    fig.add_scatter(x=test.index,y=arima_pred,name="ARIMA")
+    fig.add_scatter(x=test.index,y=lstm_pred,name="LSTM")
+
+    st.plotly_chart(fig, use_container_width=True)
