@@ -56,6 +56,6 @@ pip install -r requirements.txt
 # Launch the Streamlit app
 streamlit run app.py
 
-##📊 Dataset
+## 📊 Dataset
 
 The project utilizes the Walmart Store Sales Forecasting dataset from Kaggle, containing comprehensive historical sales data across multiple Walmart stores and departments.
