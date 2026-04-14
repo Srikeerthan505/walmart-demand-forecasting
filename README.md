@@ -39,7 +39,7 @@ walmart-forecast/
 ├── app.py                 # Main Streamlit dashboard script
 ├── requirements.txt       # Python dependencies
 └── README.md
-
+```
 
 ## ▶️ Run Locally
 
