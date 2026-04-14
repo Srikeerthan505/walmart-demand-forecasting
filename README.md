@@ -32,19 +32,19 @@ An end-to-end data science and analytics web application that forecasts future p
 
 ```text
 WALMART-DEMAND-FORECASTING/
-├── data/                  # Raw CSV datasets
-├── src/                   # Core logic modules
-│   ├── data_loader.py     # Data ingestion scripts
-│   ├── preprocess.py      # Data cleaning and feature engineering
-│   ├── model.py           # ARIMA model implementation
-│   ├── lstm_model.py      # Deep learning (LSTM) architecture
-│   └── metrics.py         # Evaluation metrics (RMSE, MAPE, etc.)
-├── venv/                  # Virtual environment (ignored in git)
-├── app.py                 # Main Streamlit dashboard script
-├── requirements.txt       # Python dependencies
-├── runtime.txt            # Python runtime specification for deployment
-├── .gitignore             # Git ignore rules
-└── README.md              # Project documentation
+├── data/                  
+├── src/                   
+│   ├── data_loader.py     
+│   ├── preprocess.py     
+│   ├── model.py           
+│   ├── lstm_model.py      
+│   └── metrics.py       
+├── venv/                  
+├── app.py                
+├── requirements.txt      
+├── runtime.txt           
+├── .gitignore             
+└── README.md             
 ```
 
 ## ▶️ Run Locally
