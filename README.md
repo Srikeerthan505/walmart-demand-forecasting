@@ -1,20 +1,20 @@
 # 🛒 Walmart Demand Forecasting & Inventory Optimization System
 
 [![Python 3.10](https://img.shields.io/badge/Python-3.10-blue.svg)](https://www.python.org/)
-[![Streamlit Deployed](https://img.shields.io/badge/Streamlit-Deployed-FF4B4B.svg)](https://walmart-demand-forecasting-srikeerthan.streamlit.app/)
-[![Model ARIMA](https://img.shields.io/badge/Model-ARIMA-orange.svg)]()
+[![Streamlit Deployed](https://img.shields.io/badge/Streamlit-Deployed-FF4B4B.svg)](https://walmart-demand-forecasting-keerthan.streamlit.app/)
+[![Model ARIMA & LSTM](https://img.shields.io/badge/Models-ARIMA%20%7C%20LSTM-orange.svg)]()
 
-> **Live Application:** [View the Interactive Streamlit Dashboard Here](https://walmart-demand-forecasting-srikeerthan.streamlit.app/)
+> **Live Application:** [View the Interactive Streamlit Dashboard Here](https://walmart-demand-forecasting-keerthan.streamlit.app/)
 
 ## 📌 Overview
 
-An end-to-end data science and analytics web application that forecasts future product demand for Walmart stores using ARIMA time series modeling. By translating predictive data into actionable business intelligence, this system recommends optimal inventory levels to help businesses reduce overstock, minimize holding costs, and prevent stockouts.
+An end-to-end data science and analytics web application that forecasts future product demand for Walmart stores using time series modeling (ARIMA and LSTM). By translating predictive data into actionable business intelligence, this system recommends optimal inventory levels to help businesses reduce overstock, minimize holding costs, and prevent stockouts.
 
 ## 🚀 Features
 
 * 📈 **Interactive Weekly Sales Forecasting:** Generates reliable future demand predictions across different store branches.
 * 📦 **Automated Inventory Recommendations:** Calculates optimal weekly stock levels based on forecasted demand.
-* 🔍 **Anomaly & Trend Detection:** Automatically identifies historical sales spikes and seasonal trends for better context.
+* 🧠 **Deep Learning Integration:** Includes an experimental LSTM neural network architecture for complex sequence prediction.
 * 📊 **Live Streamlit Dashboard:** A user-friendly, real-time interface for stakeholders to interact with the data.
 * 🗄️ **Raw Data Explorer:** Allows users to drill down into the underlying historical data (400K+ records).
 
@@ -24,31 +24,36 @@ An end-to-end data science and analytics web application that forecasts future p
 | :--- | :--- |
 | **Python** | Core programming language |
 | **Pandas** | Data processing, cleaning, and feature extraction |
-| **Statsmodels** | Time series modeling (ARIMA) |
+| **Statsmodels** | Statistical time series modeling (ARIMA) |
+| **TensorFlow / Keras** | Deep learning time series modeling (LSTM) |
 | **Streamlit** | Web application and interactive dashboard framework |
 
 ## 📁 Project Structure
 
 ```text
-walmart-forecast/
+WALMART-DEMAND-FORECASTING/
 ├── data/                  # Raw CSV datasets
 ├── src/                   # Core logic modules
-│   ├── data_loader.py
-│   ├── preprocess.py
-│   └── model.py
+│   ├── data_loader.py     # Data ingestion scripts
+│   ├── preprocess.py      # Data cleaning and feature engineering
+│   ├── model.py           # ARIMA model implementation
+│   ├── lstm_model.py      # Deep learning (LSTM) architecture
+│   └── metrics.py         # Evaluation metrics (RMSE, MAPE, etc.)
+├── venv/                  # Virtual environment (ignored in git)
 ├── app.py                 # Main Streamlit dashboard script
 ├── requirements.txt       # Python dependencies
-└── README.md
+├── runtime.txt            # Python runtime specification for deployment
+├── .gitignore             # Git ignore rules
+└── README.md              # Project documentation
 ```
 
 ## ▶️ Run Locally
 
-To run this project on your local machine, follow these steps:
 # Clone the repository
 git clone [https://github.com/Srikeerthan505/walmart-forecast](https://github.com/Srikeerthan505/walmart-forecast)
 
 # Navigate to the project directory
-cd walmart-forecast
+cd WALMART-DEMAND-FORECASTING
 
 # Install the required dependencies
 pip install -r requirements.txt
